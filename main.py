@@ -1,22 +1,10 @@
 import requests
 import tkinter as tk
-from tkinter import *
-from bs4 import BeautifulSoup
-import urllib.request
-from urllib.request import urlopen
-from tkinter import font
-import re
-import html2text
 
 def getNews():
     api_key = "c89a0fdb7dc24da8ba6cbc15c6152dad"
     url = "https://newsapi.org/v2/everything?domains=cnn.com,telegraph.co.uk,bbc.com,reddit.com&language=en&sortBy=publishedAt&apiKey=" + api_key
     news = requests.get(url).json()
-    page = urlopen(url)
-
-    html_text = page.read()
-    html = html_text.decode("utf-8")
-    rendered_content = html2text.html2text(html)
 
     class Article:
         title = ""
@@ -29,9 +17,8 @@ def getNews():
     articles = news["articles"]
 
     my_articles = []
-    my_content = []
     my_news = ""
-    searched_topic = "Biden"
+    searched_topic = "Democrats"
     for article in articles:
         if(article["content"].find(searched_topic)!=-1):
             my_articles.append(Article(article["title"], article["content"]))
@@ -39,12 +26,12 @@ def getNews():
     for i in range(len(my_articles)):
         my_news = my_news + my_articles[i].title + "=>" + my_articles[i].content + "\n"
 
-    label.config(text=my_news)
+    label.config(text=my_news, wraplength=550)
 
 canvas = tk.Tk()
 canvas.geometry("900x600")
 canvas.title("GUI News Feed")
-label = tk.Message()
+label = tk.Label()
 
 menu = tk.Menu(canvas)
 canvas.config(menu=menu)
